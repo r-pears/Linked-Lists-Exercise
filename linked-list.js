@@ -231,6 +231,100 @@ class LinkedList {
       
     return (total / this.length);
   }
+
+  /** sortLinked(): take two sorted linked lists and return a new sorted linked list */
+
+  sortLinked(listA, listB) {
+    let newList = new LinkedList();
+
+    let nodeA = listA.head;
+    let nodeB = listB.head;
+
+    while (nodeA || nodeB) {
+      if (nodeA && nodeB) {
+        if (nodeA.val < nodeB.val) {
+          newList.push(nodeA.val);
+          nodeA = nodeA.next;
+        } else {
+          newList.push(nodeB.val);
+          nodeB = nodeB.next;
+        }
+      } else if (nodeA) {
+        newList.push(nodeA.val);
+        nodeA = nodeA.next;        
+      } else if (nodeB) {
+        newList.push(nodeB.val);
+        nodeB = nodeB.next;        
+      }
+    }
+
+    return newList;
+  }
+
+  /** reverse(): reverses a linked list in place */
+
+  reverse() {
+    if (this.length <= 1) return;
+
+    const newHead = this.tail;
+    const newTail = this.head;
+
+    let currentNode = this.head;
+    let nextNode = currentNode.next;
+    currentNode.next = null;
+
+    for (let i = 0; i <= this.length - 1; i++){
+      let nextNext = nextNode.next;
+      nextNode.next = currentNode;
+      currentNode = nextNode;
+      nextNext = nextNext;
+    }
+    
+    this.head = newHead;
+    this.tail = newTail;
+  }
+
+  /** pivot(): pivot all data around a number
+   * Return everything < pivot in the first half of the list 
+   * and everything > pivot in the second half. */
+
+  pivot(num) {
+    let pivotNode;
+    let currentNode = this.head;
+    let nextNode = currentNode.next;
+
+    if (currentNode.val < num) {
+      pivotNode = currentNode;
+    }
+
+    for (let i = 0; i <= this.length - 1; i++){
+      let nextNext = nextNode.next;
+
+      if (nextNode.val < num) {
+        if (pivotNode) {
+          if (pivotNode === currentNode) {
+            pivotNode = nextNode;
+            currentNode = nextNode;
+          } else {
+            nextNode.next = pivotNode.next;
+            pivotNode.next = nextNode;
+            pivotNode = nextNode;
+            currentNode.next = nextNext;
+          }
+        } else {
+          nextNode.next = this.head;
+          this.head = nextNode;
+          pivotNode = nextNode;
+          currentNode.next = nextNext;
+        }
+      } else {
+        currentNode = nextNode
+      }
+      nextNode = nextNext;
+    }    
+    
+    this.tail = currentNode;
+  }
 }
 
 module.exports = LinkedList;
